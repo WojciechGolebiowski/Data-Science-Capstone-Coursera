@@ -68,15 +68,15 @@ def show_pie_chart(selected_site):
 @app.callback(Output(component_id='success-payload-scatter-chart', component_property='figure'),
                     [Input(component_id='site-dropdown', component_property='value'),
                     Input(component_id='payload-slider', component_property='value')])
-def show_scatter_chart(selected_site,selected_slider):
+def show_scatter_chart(selected_site,slide_value):
     if selected_site == 'ALL':
-        fig = px.scatter(spacex_df,
+        fig = px.scatter(spacex_df.loc[(spacex_df['Payload Mass (kg)'] >= slide_value[0]) & (spacex_df['Payload Mass (kg)'] <= slide_value[1])],
             x = 'Payload Mass (kg)',
             y = 'class',
             color="Booster Version Category")
         return fig
     else:
-        df = spacex_df.loc[spacex_df['Launch Site'] == selected_site]
+        df = spacex_df.loc[(spacex_df['Launch Site'] == selected_site) & (spacex_df['Payload Mass (kg)'] >= float(slide_value[0])) & (spacex_df['Payload Mass (kg)'] <= float(slide_value[1]))]
         fig = px.scatter(df,
             x = 'Payload Mass (kg)',
             y = 'class',
